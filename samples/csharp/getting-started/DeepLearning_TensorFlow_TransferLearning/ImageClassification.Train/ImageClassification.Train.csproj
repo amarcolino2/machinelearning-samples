@@ -1,0 +1,322 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.2</LangVersion>
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
+    <PackageReference Include="Microsoft.ML.Dnn" Version="$(MicrosoftMLPreviewVersion)" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\inputs\images-for-predictions\" />
+    <Folder Include="assets\inputs\images\" />
+    <Folder Include="assets\outputs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\gamer_chair_01.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\green-office-chair-test.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\high-metal-office-chair.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\high-metal-office-chair_leaked.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\north_west_us_green_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\north_west_us_wooden_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\plain_black_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\plain_white_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\ChairsForPredictions\usa_flag_game_watching_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\BlackRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\FlowersForPredictions\RareThreeSpiralledRose.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\gamer_chair_01.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\high-metal-office-chair_leaked.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_green_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\north_west_us_wooden_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_black_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\plain_white_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images-for-predictions\usa_flag_game_watching_chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175818745_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175830489_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175836082_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175851681_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175858325_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175907252_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175913386_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175921586_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175923695_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175926855_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175944865_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175952077_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_175957842_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180003632_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180007877_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180010651_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180014005_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180017624_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180020252_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180022598_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180025269_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180027387_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180030921_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180034607_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180037037_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180040511_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180045781_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180049665_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180051786_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180054177_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180059495_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180103358_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180112846_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180116977_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180120878_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180143405_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180147825_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180156717_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180206412_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\001-Green-Meeting-Chair-Redmond\20181112_180216729_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190513762_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190524071_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190530997_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190536234_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190540383_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190547700_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190550065_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190553237_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190600007_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190604313_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190609532_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190614573_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190619905_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190628986_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190637299_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190645064_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190647203_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190652782_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190659860_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190701704_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190708237_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190712772_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190715079_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190721408_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190725600_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190727271_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190730984_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190732430_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190736273_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190739212_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190742683_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190744159_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190748181_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190749644_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190751085_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190752777_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190754430_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190756787_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190803633_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\inputs\images\002-High-Metal-Chair-Redmond\20181112_190807602_iOS.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
