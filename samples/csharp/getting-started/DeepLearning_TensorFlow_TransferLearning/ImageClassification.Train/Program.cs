@@ -19,7 +19,7 @@ namespace ImageClassification.Train
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
             string imagesFolder = Path.Combine(assetsPath, "inputs", "images");
-            string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions");
+            string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
 
             try
             {
@@ -36,8 +36,7 @@ namespace ImageClassification.Train
                 IDataView testDataset = trainTestData.TestSet;
 
                 var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
-                    .Append(mlContext.Transforms.LoadImages("ImageObject", null,
-                        "ImagePath"))
+                    .Append(mlContext.Transforms.LoadImages("ImageObject", null, "ImagePath"))
                     .Append(mlContext.Transforms.ResizeImages("Image",
                         inputColumnName: "ImageObject", imageWidth: 299,
                         imageHeight: 299))
@@ -48,7 +47,7 @@ namespace ImageClassification.Train
                             epoch: 100, //An epoch is one learning cycle where the learner sees the whole training data set.
                             batchSize: 100, // batchSize sets then number of images to feed the model at a time
                             statisticsCallback: (epoch, accuracy, crossEntropy) => Console.WriteLine(
-                                                                                        $"Epoch/training-step: {epoch}, " +
+                                                                                        $"Epoch/training-cycle: {epoch}, " +
                                                                                         $"Accuracy: {accuracy * 100}%, " +
                                                                                         $"Cross-Entropy: {crossEntropy}")));
                     
