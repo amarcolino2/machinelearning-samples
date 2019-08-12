@@ -8,15 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ML" Version="$(MicrosoftMLVersion)" />
-    <PackageReference Include="Microsoft.ML.Dnn" Version="$(MicrosoftMLPreviewVersion)" />
-    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="$(MicrosoftMLVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="assets\inputs\images-for-predictions\" />
     <Folder Include="assets\inputs\images\" />
     <Folder Include="assets\outputs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML" Version="1.4.0-preview-28011-0" />
+    <PackageReference Include="Microsoft.ML.Dnn" Version="0.16.0-preview-28011-0" />
+    <PackageReference Include="Microsoft.ML.ImageAnalytics" Version="1.4.0-preview-28011-0" />
   </ItemGroup>
 
   <ItemGroup>

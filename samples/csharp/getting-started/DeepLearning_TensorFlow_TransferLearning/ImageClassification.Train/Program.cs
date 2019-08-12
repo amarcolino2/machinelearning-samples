@@ -26,7 +26,7 @@ namespace ImageClassification.Train
                 MLContext mlContext = new MLContext(seed: 1);
 
                 //Load all the original images info
-                IEnumerable<ImageData> images = LoadImagesFromDirectory(imagesFolder, true);
+                IEnumerable<ImageData> images = LoadImagesFromDirectory(folder:imagesFolder, useFolderNameasLabel:true);
                 IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
                 IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
@@ -43,13 +43,18 @@ namespace ImageClassification.Train
                         imageHeight: 299))
                     .Append(mlContext.Transforms.ExtractPixels("Image",
                         interleavePixelColors: true))
-                    .Append(mlContext.Model.ImageClassification("Image",
-                        "Label", arch: DnnEstimator.Architecture.InceptionV3, epoch: 10, //An epoch is one learning cycle where the learner sees the whole training data set.
-                        batchSize: 20)); // batchSize sets then number of images to feed the model at a time
-
+                    .Append(mlContext.Model.ImageClassification("Image", "Label", 
+                            arch: DnnEstimator.Architecture.InceptionV3, 
+                            epoch: 100, //An epoch is one learning cycle where the learner sees the whole training data set.
+                            batchSize: 100, // batchSize sets then number of images to feed the model at a time
+                            statisticsCallback: (epoch, accuracy, crossEntropy) => Console.WriteLine(
+                                                                                        $"Epoch/training-step: {epoch}, " +
+                                                                                        $"Accuracy: {accuracy * 100}%, " +
+                                                                                        $"Cross-Entropy: {crossEntropy}")));
+                    
                 Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 
-                // Measuring CreatePredictionengine() time
+                // Measuring time
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
                 var trainedModel = pipeline.Fit(trainDataset);
@@ -59,11 +64,22 @@ namespace ImageClassification.Train
 
                 Console.WriteLine("Training with transfer learning took: " + (elapsedMs/1000).ToString() + " seconds");
 
-                var predicted = trainedModel.Transform(testDataset);
-                var metrics = mlContext.MulticlassClassification.Evaluate(predicted);
+                Console.WriteLine("Predicting and evaluating quality...");
+
+                // Measuring time
+                var watch2 = System.Diagnostics.Stopwatch.StartNew();
+
+                var predictions = trainedModel.Transform(testDataset);
+                var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
 
                 Console.WriteLine($"Micro-accuracy: {metrics.MicroAccuracy}," +
                                   $"macro-accuracy = {metrics.MacroAccuracy}");
+
+                watch2.Stop();
+                long elapsed2Ms = watch2.ElapsedMilliseconds;
+
+                Console.WriteLine("Predicting and Evaluation took: " + (elapsed2Ms / 1000).ToString() + " seconds");
+
 
                 // Create prediction function and test prediction
                 var predictionEngine = mlContext.Model
@@ -113,15 +129,12 @@ namespace ImageClassification.Train
                     }
                 }
 
-                //Return the Dataset with labels
-                for (int index = 0; index < files.Length; index++)
+                yield return new ImageData()
                 {
-                    yield return new ImageData()
-                    {
-                        ImagePath = file,
-                        Label = label
-                    };
-                }
+                    ImagePath = file,
+                    Label = label
+                };
+
             }            
         }
 
