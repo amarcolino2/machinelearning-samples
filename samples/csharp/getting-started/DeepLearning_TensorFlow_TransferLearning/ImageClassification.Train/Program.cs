@@ -9,6 +9,7 @@ using Microsoft.ML.Transforms;
 using static Microsoft.ML.DataOperationsCatalog;
 using System.Linq;
 using Microsoft.ML.Data;
+using ImageClassification.Train.Utils;
 
 namespace ImageClassification.Train
 {
@@ -19,11 +20,14 @@ namespace ImageClassification.Train
             string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
-            string imagesFolder = Path.Combine(assetsPath, "inputs", "images");
+            string imagesDownloadFolder = Path.Combine(assetsPath, "inputs", "images");
+            string imagesFolder = Path.Combine(imagesDownloadFolder, "flower_photos_small_set");
             string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
 
             try
             {
+                DownloadImageSet(imagesDownloadFolder);
+
                 MLContext mlContext = new MLContext(seed: 1);
 
                 //Load all the original images info
@@ -157,6 +161,23 @@ namespace ImageClassification.Train
                 };
 
             }            
+        }
+
+        public static void DownloadImageSet(string imagesDownloadFolder)
+        {
+            // get a set of images to teach the network about the new classes
+
+            //FULL FLOWERS IMAGESET (3,600 files)
+            //string fileName = "flower_photos.tgz";
+            //string url = $"http://download.tensorflow.org/example_images/{fileName}";
+
+            //SMALL FLOWERS IMAGESET (200 files)
+            string fileName = "flower_photos_small_set.zip";
+            string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+
+            Web.Download(url, imagesDownloadFolder, fileName);
+            Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
+
         }
 
         public static string GetAbsolutePath(string relativePath)
