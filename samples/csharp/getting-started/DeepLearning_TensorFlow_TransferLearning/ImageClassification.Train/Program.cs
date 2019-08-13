@@ -21,7 +21,7 @@ namespace ImageClassification.Train
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
             string imagesDownloadFolder = Path.Combine(assetsPath, "inputs", "images");
-            string imagesFolder = Path.Combine(imagesDownloadFolder, "flower_photos_small_set");
+            string imagesFolder = Path.Combine(imagesDownloadFolder, "flower_photos_small_set"); // "flower_photos"
             string imagesForPredictions = Path.Combine(assetsPath, "inputs", "images-for-predictions", "FlowersForPredictions");
 
             try
@@ -170,14 +170,14 @@ namespace ImageClassification.Train
             //FULL FLOWERS IMAGESET (3,600 files)
             //string fileName = "flower_photos.tgz";
             //string url = $"http://download.tensorflow.org/example_images/{fileName}";
+            //Web.Download(url, imagesDownloadFolder, fileName);
+            //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
             //SMALL FLOWERS IMAGESET (200 files)
             string fileName = "flower_photos_small_set.zip";
             string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
-
             Web.Download(url, imagesDownloadFolder, fileName);
             Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
-
         }
 
         public static string GetAbsolutePath(string relativePath)
