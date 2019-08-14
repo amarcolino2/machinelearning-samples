@@ -41,22 +41,25 @@ namespace ImageClassification.Train
                 IDataView trainDataset = trainTestData.TrainSet;
                 IDataView testDataset = trainTestData.TestSet;
 
-                var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label")
+                var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:"LabelAsKey", inputColumnName:"Label")
                     .Append(mlContext.Transforms.LoadImages("ImageObject", null, "ImagePath"))
                     .Append(mlContext.Transforms.ResizeImages("Image",
                         inputColumnName: "ImageObject", imageWidth: 299,
                         imageHeight: 299))
                     .Append(mlContext.Transforms.ExtractPixels("Image",
                         interleavePixelColors: true))
-                    .Append(mlContext.Model.ImageClassification("Image", "Label",
+                    .Append(mlContext.Model.ImageClassification("Image", "LabelAsKey",
                             arch: DnnEstimator.Architecture.InceptionV3,
-                            epoch: 1200,              //An epoch is one learning cycle where the learner sees the whole training data set.
-                            batchSize: 100,            // batchSize sets then number of images to feed the model at a time
-                            learningRate: 0.000001f,  //Good for hundreds of images: 0.000001f
+                            epoch: 25,               //An epoch is one learning cycle where the learner sees the whole training data set.
+                            batchSize: 100,          // batchSize sets then number of images to feed the model at a time
+                            learningRate: 0.000001f, //Good for hundreds of images: 0.000001f
                             statisticsCallback: (epoch, accuracy, crossEntropy) => Console.WriteLine(
                                                                                         $"Training-cycle: {epoch}, " +
                                                                                         $"Accuracy: {accuracy * 100}%, " +
                                                                                         $"Cross-Entropy: {crossEntropy}")));
+
+                    //.Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:"PredictedLabelValue", 
+                    //                                                      inputColumnName:"PredictedLabel"));
 
                 Console.WriteLine("*** Training the image classification model with DNN Transfer Learning on top of the selected pre-trained model/architecture ***");
 
@@ -99,7 +102,7 @@ namespace ImageClassification.Train
 
             // Find the original label names.
             VBuffer<ReadOnlyMemory<char>> keys = default;
-            predictionEngine.OutputSchema["Label"].GetKeyValues(ref keys);
+            predictionEngine.OutputSchema["LabelAsKey"].GetKeyValues(ref keys);
 
             var originalLabels = keys.DenseValues().ToArray();
             var index = prediction.PredictedLabel;
@@ -117,8 +120,15 @@ namespace ImageClassification.Train
             // Measuring time
             var watch2 = System.Diagnostics.Stopwatch.StartNew();
 
-            IDataView predictions = trainedModel.Transform(testDataset);
-            var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
+            IDataView predictionsDataView = trainedModel.Transform(testDataset);
+            //var metrics = mlContext.MulticlassClassification.Evaluate(predictions);
+
+            // This is an optional step, but it's useful for debugging issues
+            var loadedModelOutputColumnNames = predictionsDataView.Schema
+                .Where(col => !col.IsHidden).Select(col => col.Name);
+
+            var metrics = mlContext.MulticlassClassification.Evaluate(predictionsDataView, labelColumnName:"LabelAsKey", predictedLabelColumnName: "PredictedLabel");
+            ConsoleHelper.PrintMultiClassClassificationMetrics("TensorFlow DNN Transfer Learning", metrics);
 
             Console.WriteLine($"Micro-accuracy: {metrics.MicroAccuracy}," +
                               $"macro-accuracy = {metrics.MacroAccuracy}");
@@ -128,10 +138,16 @@ namespace ImageClassification.Train
 
             Console.WriteLine("Predicting and Evaluation took: " + (elapsed2Ms / 1000).ToString() + " seconds");
 
-            // Find out labels list
-            //VBuffer<ReadOnlyMemory<char>> keys = default;
-            //predictions.Schema["Label"].GetKeyValues(ref keys);
-            //var originalLabels = keys.DenseValues().ToArray();
+            Console.WriteLine("*** Showing all the predictions ***");
+
+            // Find the original label names.
+            VBuffer<ReadOnlyMemory<char>> keys = default;
+            predictionsDataView.Schema["LabelAsKey"].GetKeyValues(ref keys);
+            var originalLabels = keys.DenseValues().ToArray();
+
+            List<ImageWithPipelineFeatures> predictions = mlContext.Data.CreateEnumerable<ImageWithPipelineFeatures>(predictionsDataView, false, true).ToList();
+            predictions.ForEach(pred => ConsoleWriteImagePrediction(pred.ImagePath, pred.Label, (originalLabels[pred.PredictedLabel]).ToString(), pred.Score.Max()));
+
         }
 
         public static IEnumerable<ImageData> LoadImagesFromDirectory(string folder, bool useFolderNameasLabel = true)
@@ -194,6 +210,32 @@ namespace ImageClassification.Train
 
             return fullPath;
         }
+
+        public static void ConsoleWriteImagePrediction(string ImagePath, string Label, string PredictedLabel, float Probability)
+        {
+            var defaultForeground = Console.ForegroundColor;
+            var labelColor = ConsoleColor.Magenta;
+            var probColor = ConsoleColor.Blue;
+
+            Console.Write("Image File: ");
+            Console.ForegroundColor = labelColor;
+            Console.Write($"{Path.GetFileName(ImagePath)}");
+            Console.ForegroundColor = defaultForeground;
+            Console.Write(" original labeled as ");
+            Console.ForegroundColor = labelColor;
+            Console.Write(Label);
+            Console.ForegroundColor = defaultForeground;
+            Console.Write(" predicted as ");
+            Console.ForegroundColor = labelColor;
+            Console.Write(PredictedLabel);
+            Console.ForegroundColor = defaultForeground;
+            Console.Write(" with score ");
+            Console.ForegroundColor = probColor;
+            Console.Write(Probability);
+            Console.ForegroundColor = defaultForeground;
+            Console.WriteLine("");
+        }
+
     }
 }
 
