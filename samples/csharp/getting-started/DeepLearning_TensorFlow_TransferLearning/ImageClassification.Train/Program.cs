@@ -9,7 +9,7 @@ using Microsoft.ML.Transforms;
 using static Microsoft.ML.DataOperationsCatalog;
 using System.Linq;
 using Microsoft.ML.Data;
-using ImageClassification.Train.Utils;
+using Common;
 
 namespace ImageClassification.Train
 {
@@ -34,8 +34,10 @@ namespace ImageClassification.Train
                 IEnumerable<ImageData> images = LoadImagesFromDirectory(folder: imagesFolder, useFolderNameasLabel: true);
                 IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(images);
 
+                IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+
                 // Split the data 80:20 into train and test sets, train and evaluate.
-                TrainTestData trainTestData = mlContext.Data.TrainTestSplit(fullImagesDataset, testFraction: 0.2, seed: 1);
+                TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
                 IDataView trainDataset = trainTestData.TrainSet;
                 IDataView testDataset = trainTestData.TestSet;
 
@@ -48,10 +50,11 @@ namespace ImageClassification.Train
                         interleavePixelColors: true))
                     .Append(mlContext.Model.ImageClassification("Image", "Label",
                             arch: DnnEstimator.Architecture.InceptionV3,
-                            epoch: 100, //An epoch is one learning cycle where the learner sees the whole training data set.
-                            batchSize: 100, // batchSize sets then number of images to feed the model at a time
+                            epoch: 1200,              //An epoch is one learning cycle where the learner sees the whole training data set.
+                            batchSize: 100,            // batchSize sets then number of images to feed the model at a time
+                            learningRate: 0.000001f,  //Good for hundreds of images: 0.000001f
                             statisticsCallback: (epoch, accuracy, crossEntropy) => Console.WriteLine(
-                                                                                        $"Epoch/training-cycle: {epoch}, " +
+                                                                                        $"Training-cycle: {epoch}, " +
                                                                                         $"Accuracy: {accuracy * 100}%, " +
                                                                                         $"Cross-Entropy: {crossEntropy}")));
 
@@ -60,12 +63,14 @@ namespace ImageClassification.Train
                 // Measuring training time
                 var watch = System.Diagnostics.Stopwatch.StartNew();
 
-                var trainedModel = pipeline.Fit(trainDataset);
+                ITransformer trainedModel = pipeline.Fit(trainDataset);
 
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
 
                 Console.WriteLine("Training with transfer learning took: " + (elapsedMs / 1000).ToString() + " seconds");
+
+                EvaluateModel(mlContext, testDataset, trainedModel);
 
                 TrySinglePrediction(imagesForPredictions, mlContext, trainedModel);
             }
@@ -78,7 +83,7 @@ namespace ImageClassification.Train
             Console.ReadKey();
         }
 
-        private static void TrySinglePrediction(string imagesForPredictions, MLContext mlContext, TransformerChain<DnnTransformer> trainedModel)
+        private static void TrySinglePrediction(string imagesForPredictions, MLContext mlContext, ITransformer trainedModel)
         {
             // Create prediction function to try one prediction
             var predictionEngine = mlContext.Model
@@ -104,7 +109,7 @@ namespace ImageClassification.Train
                               $"Predicted Label : {originalLabels[index]}");
         }
 
-        //EvaluateModel(mlContext, testDataset, trainedModel);
+        
         private static void EvaluateModel(MLContext mlContext, IDataView testDataset, ITransformer trainedModel)
         {
             Console.WriteLine("Making bulk predictions and evaluating model's quality...");
@@ -191,3 +196,14 @@ namespace ImageClassification.Train
         }
     }
 }
+
+
+
+//IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+//shuffledFullImagesDataset = mlContext.Transforms.Conversion.MapValueToKey("Label")
+//    .Fit(shuffledFullImagesDataset)
+//    .Transform(shuffledFullImagesDataset);
+
+//fullImagesDataset = mlContext.Transforms.Conversion.MapValueToKey("Label")
+//    .Fit(fullImagesDataset)
+//    .Transform(fullImagesDataset);
