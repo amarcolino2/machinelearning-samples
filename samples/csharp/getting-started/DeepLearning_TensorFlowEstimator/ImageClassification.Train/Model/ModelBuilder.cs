@@ -40,7 +40,7 @@ namespace ImageClassification.Model
             public const bool channelsLast = true;
         }
 
-        public void BuildAndTrain(IEnumerable<ImageData> imagesWithLabels)
+        public void BuildAndTrain(IEnumerable<ImageData> imageSet, IEnumerable<ImageData> testImageSet)
         {
             ConsoleWriteHeader("Read model");
             Console.WriteLine($"Model location: {inputTensorFlowModelFilePath}");
@@ -50,16 +50,22 @@ namespace ImageClassification.Model
 
             // 1. Load images information (filenames and labels) in IDataView
 
-            IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(imagesWithLabels);
-            //IDataView fullImagesDataset = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
+            //Single Full Image Set
+            //
+            //IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(imageSet);
+            ////IDataView fullImagesDataset = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
 
-            IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
+            //IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
-            // Split the data 80:20 into train and test sets, train and evaluate.
-            TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
-            IDataView trainDataView = trainTestData.TrainSet;
-            IDataView testDataView = trainTestData.TestSet;
+            //// Split the data 80:20 into train and test sets, train and evaluate.
+            //TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
+            //IDataView trainDataView = trainTestData.TrainSet;
+            //IDataView testDataView = trainTestData.TestSet;
 
+            //Load seggregated train-image-set 
+            IDataView trainDataView = mlContext.Data.LoadFromEnumerable(imageSet);
+            //Load seggregated test-image-set 
+            IDataView testDataView = mlContext.Data.LoadFromEnumerable(testImageSet);
 
             // 2. Load images in-memory while applying image transformations 
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: LabelAsKey, inputColumnName: "Label")

@@ -23,16 +23,26 @@ namespace ImageClassification.Train
 
             string imagesDownloadFolderPath = Path.Combine(assetsPath, "inputs", "images");
             string finalImagesFolderName = DownloadImageSet(imagesDownloadFolderPath);
-            var fullImagesSetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
+            var fullImagesetFolderPath = Path.Combine(imagesDownloadFolderPath, finalImagesFolderName);
 
-            IEnumerable<ImageData> imagesWithLabels = LoadImagesFromDirectory(folder:fullImagesSetFolderPath, 
-                                                                    useFolderNameasLabel:true);
-          
+            //Use seggregated train/test image sets
+            string trainImagesetFolderPath = Path.Combine(fullImagesetFolderPath, "train-dataset");
+            string testImagesetFolderPath = Path.Combine(fullImagesetFolderPath, "test-dataset");
+
+            // Single full dataset
+            //IEnumerable<ImageData> allImages = LoadImagesFromDirectory(folder:fullImagesSetFolderPath, 
+            //                                                        useFolderNameasLabel:true);
+
+            //Load seggregated train-image-set 
+            IEnumerable<ImageData> trainImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);            
+            //Load seggregated test-image-set 
+            IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);
+
             try
             {              
-                var modelBuilder = new ModelBuilder(tagsTsv, fullImagesSetFolderPath, inceptionPb, imageClassifierZip);
+                var modelBuilder = new ModelBuilder(tagsTsv, fullImagesetFolderPath, inceptionPb, imageClassifierZip);
 
-                modelBuilder.BuildAndTrain(imagesWithLabels);
+                modelBuilder.BuildAndTrain(trainImages, testImages);
             }
             catch (Exception ex)
             {
@@ -88,8 +98,14 @@ namespace ImageClassification.Train
             //Compress.ExtractTGZ(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
             //SMALL FLOWERS IMAGESET (200 files)
-            string fileName = "flower_photos_small_set.zip";
-            string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+            //string fileName = "flower_photos_small_set.zip";
+            //string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set.zip?st=2019-08-07T21%3A27%3A44Z&se=2030-08-08T21%3A27%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=SZ0UBX47pXD0F1rmrOM%2BfcwbPVob8hlgFtIlN89micM%3D";
+            //Web.Download(url, imagesDownloadFolder, fileName);
+            //Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
+
+            //SPLIT TRAIN/TEST DATASETS (FROM SMALL IMAGESET - 200 files)
+            string fileName = "flower_photos_small_set_split.zip";
+            string url = $"https://mlnetfilestorage.file.core.windows.net/imagesets/flower_images/flower_photos_small_set_split.zip?st=2019-08-23T00%3A03%3A25Z&se=2030-08-24T00%3A03%3A00Z&sp=rl&sv=2018-03-28&sr=f&sig=qROCaSGod0mCDP87xDmGCli3o8XyKUlUUimRGGVG9RE%3D";
             Web.Download(url, imagesDownloadFolder, fileName);
             Compress.UnZip(Path.Join(imagesDownloadFolder, fileName), imagesDownloadFolder);
 
