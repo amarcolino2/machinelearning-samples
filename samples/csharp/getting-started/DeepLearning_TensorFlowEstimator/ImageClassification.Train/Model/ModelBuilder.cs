@@ -33,11 +33,11 @@ namespace ImageClassification.Model
 
         private struct ImageSettingsForTFModel
         {
-            public const int imageHeight = 224;
-            public const int imageWidth = 224;
-            public const float mean = 117;
-            public const float scale = 1;
-            public const bool channelsLast = true;
+            public const int imageHeight = 299;        //224 for Inception v1 --- 299 for Inception v3
+            public const int imageWidth = 299;         //224 for Inception v1 --- 299 for Inception v3
+            public const float mean = 117;             //117 for Inception v1  (offsetImage: ImageSettingsForTFModel.mean)
+            public const float scale = 1;              //Not used in ML.NET TF API
+            public const bool channelsLast = true;     //true for Inception v1 (interleavePixelColors: ImageSettingsForTFModel.channelsLast)
         }
 
         public void BuildAndTrain(IEnumerable<ImageData> imageSet, IEnumerable<ImageData> testImageSet)
@@ -73,18 +73,22 @@ namespace ImageClassification.Model
                             .Append(mlContext.Transforms.ResizeImages(outputColumnName: "image_object_resized", imageWidth: ImageSettingsForTFModel.imageWidth, imageHeight: ImageSettingsForTFModel.imageHeight, inputColumnName: "image_object"))
                             .Append(mlContext.Transforms.ExtractPixels(outputColumnName: "input", inputColumnName: "image_object_resized", interleavePixelColors: ImageSettingsForTFModel.channelsLast, offsetImage: ImageSettingsForTFModel.mean))
                             .Append(mlContext.Model.LoadTensorFlowModel(inputTensorFlowModelFilePath).
-                                 ScoreTensorFlowModel(outputColumnNames: new[] { "softmax2_pre_activation" }, inputColumnNames: new[] { "input" }, addBatchDimensionInput: true));
-                                // Input and output column names have to coincide with the input and output tensor names of the TensorFlow model
-                                // You can check out those tensor names by opening the Tensorflow .pb model with a visual tool like Netron: https://github.com/lutzroeder/netron
-                                // TF .pb model --> Softmax node --> INPUTS --> input --> id: "input" 
-                                // TF .pb model --> input node --> INPUTS --> logits --> id: "softmax2_pre_activation" 
+                                 ScoreTensorFlowModel(outputColumnNames: new[] { "InceptionV3/Predictions/Reshape" }, 
+                                                      inputColumnNames: new[] { "input" }, 
+                                                      addBatchDimensionInput: false));  // (For Inception v1 --> addBatchDimensionInput: true)  (For Inception v3 --> addBatchDimensionInput: false)
+            // Input and output column names have to coincide with the input and output tensor names of the TensorFlow model
+            // You can check out those tensor names by opening the Tensorflow .pb model with a visual tool like Netron: https://github.com/lutzroeder/netron
+            // TF .pb model --> input node --> INPUTS --> input --> id: "input" 
+            // TF .pb model --> Softmax node --> INPUTS --> logits --> id: "softmax2_pre_activation" (Inceptionv1) or "InceptionV3/Predictions/Reshape" (Inception v3)
+
+            // 
 
             // (OPTIONAL) Peek data (such as 2 records) in training DataView after applying the ProcessPipeline's transformations 
             ConsoleHelper.PeekDataViewInConsole(mlContext, trainDataView, dataProcessPipeline, 2);
-            //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "softmax2_pre_activation", trainDataView, dataProcessPipeline, 2);
+            //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "InceptionV3/Predictions/Reshape", trainDataView, dataProcessPipeline, 2);
 
             // 3. Set the training algorithm and convert back the key to the categorical values                            
-            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "softmax2_pre_activation");
+            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "InceptionV3/Predictions/Reshape");
             var trainingPipeline = dataProcessPipeline.Append(trainer)
                                                       .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));
 

@@ -16,7 +16,12 @@ namespace ImageClassification.Train
             string assetsRelativePath = @"../../../assets";
             string assetsPath = GetAbsolutePath(assetsRelativePath);
 
-            var inceptionPb = Path.Combine(assetsPath, "inputs", "inception", "tensorflow_inception_graph.pb");
+            //Inception v1
+            //var inceptionPb = Path.Combine(assetsPath, "inputs", "tensorflow-pretrained-models", "inception-v1", "tensorflow_inception_graph.pb");
+
+            //Inception v3
+            var inceptionPb = Path.Combine(assetsPath, "inputs", "tensorflow-pretrained-models", "inception-v3", "inception_v3_2016_08_28_frozen.pb");
+
             var imageClassifierZip = Path.Combine(assetsPath, "outputs", "imageClassifier.zip");
 
             var tagsTsv = Path.Combine(assetsPath, "inputs", "data", "tags.tsv");
@@ -36,7 +41,7 @@ namespace ImageClassification.Train
             //Load seggregated train-image-set 
             IEnumerable<ImageData> trainImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);            
             //Load seggregated test-image-set 
-            IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: trainImagesetFolderPath, useFolderNameasLabel: true);
+            IEnumerable<ImageData> testImages = LoadImagesFromDirectory(folder: testImagesetFolderPath, useFolderNameasLabel: true);
 
             try
             {              

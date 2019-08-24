@@ -10,6 +10,6 @@ namespace ImageClassification.DataModels
         public string Label;
         public string PredictedLabelValue;
         public float[] Score;
-        public float[] softmax2_pre_activation;
+        //public float[] softmax2_pre_activation;  //In Inception v1: softmax2_pre_activation
     }
 }
