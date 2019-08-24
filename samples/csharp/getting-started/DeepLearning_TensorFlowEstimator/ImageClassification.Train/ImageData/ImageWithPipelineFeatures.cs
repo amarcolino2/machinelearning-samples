@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ML.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,8 @@ namespace ImageClassification.DataModels
         public string Label;
         public string PredictedLabelValue;
         public float[] Score;
-        //public float[] softmax2_pre_activation;  //In Inception v1: softmax2_pre_activation
+       
+        //[ColumnName("InceptionV3/Predictions/Reshape")]
+        //public float[] ImageFeatures;  //In Inception v1: "softmax2_pre_activation"
     }
 }

@@ -53,12 +53,10 @@ namespace ImageClassification.Model
             //Single Full Image Set
             //
             //IDataView fullImagesDataset = mlContext.Data.LoadFromEnumerable(imageSet);
-            ////IDataView fullImagesDataset = mlContext.Data.LoadFromTextFile<ImageData>(path:dataLocation, hasHeader: false);
-
             //IDataView shuffledFullImagesDataset = mlContext.Data.ShuffleRows(fullImagesDataset);
 
-            //// Split the data 80:20 into train and test sets, train and evaluate.
-            //TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.2);
+            //// Split the data 75:25 into train and test sets, train and evaluate.
+            //TrainTestData trainTestData = mlContext.Data.TrainTestSplit(shuffledFullImagesDataset, testFraction: 0.25);
             //IDataView trainDataView = trainTestData.TrainSet;
             //IDataView testDataView = trainTestData.TestSet;
 
@@ -88,7 +86,7 @@ namespace ImageClassification.Model
             //ConsoleHelper.PeekVectorColumnDataInConsole(mlContext, "InceptionV3/Predictions/Reshape", trainDataView, dataProcessPipeline, 2);
 
             // 3. Set the training algorithm and convert back the key to the categorical values                            
-            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "InceptionV3/Predictions/Reshape");
+            var trainer = mlContext.MulticlassClassification.Trainers.LbfgsMaximumEntropy(labelColumnName: LabelAsKey, featureColumnName: "InceptionV3/Predictions/Reshape");  //"softmax2_pre_activation" for Inception v1
             var trainingPipeline = dataProcessPipeline.Append(trainer)
                                                       .Append(mlContext.Transforms.Conversion.MapKeyToValue(PredictedLabelValue, "PredictedLabel"));
 
